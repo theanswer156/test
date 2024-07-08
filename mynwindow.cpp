@@ -1,8 +1,10 @@
 #include "mynwindow.h"
 //#include "ui_mynwindow.h"
 
-#include <QSplitter>
-#include <QLabel>
+//#include <QSplitter>
+//#include <QLabel>
+#include <QSpinBox>
+#include <QLineEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QWidget>
@@ -42,19 +44,26 @@ MynWindow::MynWindow(QWidget *parent) :
     layout->addWidget(rightWidget);
 
 
-//    layout->addWidget(leftLabel);
-//    layout->addWidget(rightLabel);
-
-
-
-
-
-    // 调整centralWidget的大小策略
-//    leftLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//    rightLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
 }
 MynWindow::~MynWindow()
 {
 //    delete MynWindow;
 }
+
+
+
+class PointAndCoordinate::PointAndCoordinate(int index,QSpinBox X,QSpinBox Y)
+{
+
+};
+
+
+
+
+
+
+
+
+
+
+
