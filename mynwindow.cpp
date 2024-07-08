@@ -26,19 +26,27 @@ MynWindow::MynWindow(QWidget *parent) :
     QWidget *leftWidget = new QWidget(centralWidget);
     QWidget *rightWidget = new QWidget(centralWidget);
 
+    QPushButton *leftbutton1 = new QPushButton("左边按钮1");
+    QPushButton *leftbutton2 = new QPushButton("左边按钮2");
+    QPushButton *rightbutton = new QPushButton("右边布局");
+
     QVBoxLayout *leftLayout = new QVBoxLayout(leftWidget);
     leftLayout->setSpacing(10);
-    QVBoxLayout *rightLayout = new QVBoxLayout(rightWidget);
+    leftLayout->addWidget(leftbutton1);
+    leftLayout->addWidget(leftbutton2);
 
-    QPushButton *leftbutton = new QPushButton("左边布局");
-    QPushButton *rightbutton = new QPushButton("右边布局————");
+    QHBoxLayout *rightLayout = new QHBoxLayout(rightWidget);
+    rightLayout->addWidget(rightbutton);
+
+    layout->addWidget(leftWidget);
+    layout->addWidget(rightWidget);
+
 
 //    layout->addWidget(leftLabel);
 //    layout->addWidget(rightLabel);
 
-    leftLayout->addWidget(leftbutton);
-    leftLayout->addWidget(rightbutton);
-    layout->addWidget(rightbutton);
+
+
 
 
     // 调整centralWidget的大小策略
