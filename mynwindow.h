@@ -23,13 +23,13 @@ public:
 //    Ui::MynWindow *ui;
 //    不借助UI的方法创建就没有这个变量？
 };
-class PointAndCoordinate
+class PointAndCoordinate:public QWidget
 {
 public:
-    PointAndCoordinate(int index,QSpinBox X,QSpinBox Y);
+    PointAndCoordinate(QWidget *parent,int index,QSpinBox &X,QSpinBox &Y);
     ~PointAndCoordinate();
 private:
-    QLineEdit pointName;
+    int index;
     QSpinBox coordinate_X;
     QSpinBox coordinate_Y;
 };

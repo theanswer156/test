@@ -52,11 +52,19 @@ MynWindow::~MynWindow()
 
 
 
-class PointAndCoordinate::PointAndCoordinate(int index,QSpinBox X,QSpinBox Y)
+PointAndCoordinate::PointAndCoordinate(QWidget *parent,int index,QSpinBox &X,QSpinBox &Y)
+{
+    QHBoxLayout *HLayout = new QHBoxLayout(parent);
+    QString str = "点";
+    QLineEdit *PointName = new QLineEdit(str.append(index));
+    HLayout->addWidget(PointName);
+    HLayout->addWidget(&X);
+    HLayout->addWidget(&Y);
+};
+PointAndCoordinate::~PointAndCoordinate()
 {
 
-};
-
+}
 
 
 
