@@ -25,7 +25,7 @@ public:
 signals:
     void AddButtonPushed(QHBoxLayout *HLayout,int index,QList<QSpinBox*> SpinBoxs);
 public slots:
-    void CreatNewPoint(QHBoxLayout *HLayout,int index,QList<QSpinBox*> SpinBoxs);
+    void CreatNewPoint(QHBoxLayout *leftupLayout,int index,QList<QSpinBox*> SpinBoxs);
     void PushAddButton(QHBoxLayout *HLayout,int index,QList<QSpinBox*> SpinBoxs);
     void DeletePoint();
 private:

@@ -1,0 +1,55 @@
+#ifndef PLOTWIDGET_H
+#define PLOTWIDGET_H
+
+#include <QObject>
+#include <QWidget>
+#include <QList>
+#include <QVector>
+#include <QPoint>
+#include <QtMath>
+#include <QObject>
+#include <QMoveEvent>
+
+
+class PlotWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlotWidget(QWidget *parent ,QVector<QPointF> PointIndex);
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
+
+
+
+signals:
+
+public slots:
+
+
+private:
+    QVector<QPointF> PointIndex;
+    QWidget *paintWidget;
+};
+
+#endif // PLOTWIDGET_H
+class EventFilter : public QObject {
+    Q_OBJECT
+
+public:
+    EventFilter(QObject *parent = nullptr) : QObject(parent) {}
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override {
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            emit mouseClicked(mouseEvent->pos());
+            // 可以在这里处理事件，如果需要阻止事件传递，返回 true
+        }
+        // 确保传递所有事件，包括不处理的事件
+        return QObject::eventFilter(obj, event);
+    }
+
+signals:
+    void mouseClicked(const QPoint &pos);
+};
