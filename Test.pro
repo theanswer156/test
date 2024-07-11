@@ -26,12 +26,11 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-    mynwindow.cpp \
-    plotwidget.cpp
+    mynwindow.cpp
 
 HEADERS += \
     mynwindow.h \
-    plotwidget.h
+    drawline.h
 
 FORMS += \
     mynwindow.ui

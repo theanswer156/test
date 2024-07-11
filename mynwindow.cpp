@@ -1,6 +1,5 @@
 #include "mynwindow.h"
-#include "plotwidget.h"
-#include "plotwidget.cpp"
+#include "drawline.h"
 //#include "ui_mynwindow.h"
 
 //#include <QSplitter>
@@ -10,25 +9,14 @@
 //#include <QVBoxLayout>
 //#include <QHBoxLayout>
 #include <QWidget>
+
 #include <QPushButton>
 #include <QVector>
 #include <QtAlgorithms>
 #include <QPainter>
 #include <QLayout>
 
-//#include <QtCharts/QChart>
-//#include <QtCore/QTimer>
 
-//PointAndCoordinate::PointAndCoordinate()
-//{
-//    QWidget *parent = new QWidget();
-//    QHBoxLayout *HLayout = new QHBoxLayout(parent);
-
-//};
-//PointAndCoordinate::~PointAndCoordinate()
-//{
-
-//}
 
 MynWindow::MynWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -53,12 +41,13 @@ MynWindow::MynWindow(QWidget *parent) :
 //    QHBoxLayout *LeftupLayout = new QHBoxLayout(leftupWidget);
 
     QWidget *leftupWidget = new QWidget(leftWidget);
-    QVBoxLayout *leftupLayout = new QVBoxLayout(leftupWidget);
+    QGridLayout *leftupLayout = new QGridLayout(leftupWidget);
     QWidget *leftdownWidget = new QWidget(leftWidget);
     QHBoxLayout *leftdownLayout = new QHBoxLayout(leftdownWidget);
 
     QWidget *rightupWidget = new QWidget(rightWidget);
     QVBoxLayout *rightupLayout = new QVBoxLayout(rightupWidget);
+    Q_UNUSED(rightupLayout);
     QWidget *rightdownWidget = new QWidget(rightWidget);
     QVBoxLayout *rightdownLayout = new QVBoxLayout(rightdownWidget);
 
@@ -68,63 +57,52 @@ MynWindow::MynWindow(QWidget *parent) :
 
 //    用列表来维护SpinBox的顺序
     QList<QSpinBox*> SpinBoxs;
+
 //    QVBoxLayout *leftupLayout = new QVBoxLayout(leftupWidget);
 
     QLineEdit *PointName = new QLineEdit(QString("名称"),leftupWidget);
-    PointName->setFixedWidth(100);
+    PointName->setFixedSize(100,20);
     PointName->setAlignment(Qt::AlignCenter);
     QLineEdit *AxisName_X = new QLineEdit(QString("X 轴坐标"),leftupWidget);
+    AxisName_X->setFixedSize(100,20);
     AxisName_X->setReadOnly(true);
     AxisName_X->setAlignment(Qt::AlignCenter);
     QLineEdit *AxisName_Y = new QLineEdit(QString("Y 轴坐标"),leftupWidget);
+    AxisName_Y->setFixedSize(100,20);
     AxisName_Y->setReadOnly(true);
     AxisName_Y->setAlignment(Qt::AlignCenter);
-    QHBoxLayout *LeftHLayout = new QHBoxLayout(leftupWidget);
-    LeftHLayout->addWidget(PointName);
-    LeftHLayout->addWidget(AxisName_X);
-    LeftHLayout->addWidget(AxisName_Y);
+//    QHBoxLayout *LeftHLayout = new QHBoxLayout(leftupWidget);
+//    采用垂直布局
+    leftupLayout->addWidget(PointName,0,0);
+    leftupLayout->addWidget(AxisName_X,0,1);
+    leftupLayout->addWidget(AxisName_Y,0,2);
 //    leftupWidget->setLayout(leftupHLayout);
-    leftupLayout->addLayout(LeftHLayout);
+//    leftupLayout->addLayout(LeftHLayout);
 
-
-    for (int i = 1;i<=3;++i) {
-        QHBoxLayout *LeftupHLayout = new QHBoxLayout(leftupWidget);
-        CreatNewPoint(LeftupHLayout,i,SpinBoxs);
-        leftupLayout->addLayout(LeftupHLayout);
+    for(int i = 1;i<4;++i){
+        CreatNewPoint(leftupLayout,i);
     }
-//    layout->addLayout(leftLayout);
-//    PointAndCoordinate *point1 = new PointAndCoordinate(1);
-//    PointAndCoordinate *point2 = new PointAndCoordinate(2);
-
-//    leftLayout->setSpacing(10);
-//    由于PointAndCoordinate类指定了父类  所以这里属于是在布局中添加界面？？
-//    leftLayout->addWidget(point1);
-//    leftLayout->addWidget(point2);
-//    leftLayout->addSpacing(10);
+    CreatNewPoint(leftupLayout,4);
 
 
-    //!  信号的类和槽的类都不是同一个类
-    //!
-    //!
-    //!connect(AddButton,&MynWindow::AddButtonPushed,this,&MynWindow::CreatNewPoint);
-    //!
-    //! \brief AxisName_X
-    //!
-    //!
-    //!
+//    采用CreatNewPoint重载  利用gridlayout来添加widget
+//    for (int i = 1;i<=3;++i) {
+//        QHBoxLayout *LeftupHLayout = new QHBoxLayout(leftupWidget);
+//        CreatNewPoint(LeftupHLayout,i,SpinBoxs);
+//        leftupLayout->addLayout(LeftupHLayout);
+//    }
 
-
-//    rightLayout->addWidget(rightbutton1);
-//    rightLayout->addWidget(rightbutton2);
-
-//    leftWidget->setLayout(leftLayout);
-//    rightWidget->setLayout(rightLayout);
-
-//    QHBoxLayout *leftdownLayout = new QHBoxLayout;
     QPushButton *AddButton = new QPushButton("添加新点",leftdownWidget);
+    connect(AddButton,&QPushButton::click,this,&MynWindow::AddButtonPushed);
+    //! 添加按钮信号槽链接
+    //!
     QPushButton *DeleteButton = new QPushButton("删除点",leftdownWidget);
-    AddButton->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-    DeleteButton->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    connect(DeleteButton,&QPushButton::click,this,&MynWindow::DeleteButtonPushed);
+    //! 删除按钮信号槽链接
+    //!
+    AddButton->setFixedSize(200,50);
+    DeleteButton->setFixedSize(200,50);
+
     leftdownLayout->addWidget(AddButton);
     leftdownLayout->addWidget(DeleteButton);
 
@@ -133,8 +111,9 @@ MynWindow::MynWindow(QWidget *parent) :
     leftWidget->setLayout(leftLayout);
 //    leftLayout->addWidget(leftdownWidget);
     QPushButton *PaintButton = new QPushButton("绘制曲线",rightdownWidget);
+//    connect(PaintButton,&QPushButton::click,this,&MynWindow::PushPaintButton);
     PaintButton->setFixedSize(100,50);
-    rightdownLayout->addWidget(PaintButton);
+    rightdownLayout->addWidget(PaintButton,0);
 
 //    rightLayout->addLayout(rightdownLayout);
 
@@ -149,6 +128,43 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 //!    右边界面：B样条曲线的绘制
+//!
+//!
+//!
+//!
+//!
+    // 创建折线图小部件
+    LineChartWidget *chartWidget = new LineChartWidget(rightupWidget);
+//    chartWidget->setFixedSize(100,100);
+
+    // 假设这是你已有的数据
+    QList<QPointF> myData;
+
+//    QRandomGenerator randomgen;
+//    quint64 seed = QDateTime::currentMSecsSinceEpoch();
+//    randomgen.seed(seed);
+    qDebug()<<chartWidget->size();
+
+    for (int i = 0; i < 25; i+=1) {
+        // 这里应填入你的实际数据点
+
+        myData.append(QPointF(i, (static_cast<float>(qrand() / 100)))); // someFunction 应替换为你的数据生成逻辑
+    }
+
+
+    chartWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    // 设置数据到折线图小部件
+    chartWidget->drawPoint(myData);
+    chartWidget->setdesData(myData);
+
+//    layout->addWidget(chartWidget);
+    rightupLayout->addWidget(chartWidget);
+
+
+
+
+
+
 
 
 }
@@ -169,49 +185,73 @@ void MynWindow::CreatNewPoint(QHBoxLayout *LeftupHLayout,int index,QList<QSpinBo
     QLineEdit *PointName = new QLineEdit(name);
     PointName->setReadOnly(true);
     PointName->setAlignment(Qt::AlignCenter);
-    PointName->setFixedWidth(100);
+    PointName->setFixedSize(100,20);
     QSpinBox *X = new QSpinBox(LeftupHLayout->parentWidget());
     X->setSingleStep(1);
+    X->setFixedSize(100,20);
     SpinBoxs.append(X);
     QSpinBox *Y = new QSpinBox(LeftupHLayout->parentWidget());
     Y->setSingleStep(1);
+    Y->setFixedSize(100,20);
     SpinBoxs.append(Y);
     LeftupHLayout->addWidget(PointName);
     LeftupHLayout->addWidget(X);
     LeftupHLayout->addWidget(Y);
-
-
 }
-void MynWindow::DeletePoint()
+
+
+void MynWindow::PushDeleteButton()
 {
 
 }
 
-void MynWindow::PushAddButton(QHBoxLayout *HLayout ,int index ,QList<QSpinBox*> SpinBoxs)
+void MynWindow::PushPaintButton(QList<QSpinBox *> SpinBoxs, QList<QPointF> PointIndex)
 {
 
 }
 
-void MynWindow::DrawPaint(QWidget *PaintWidget,QList<QVector<int>> PointIndex)
+void MynWindow::PushAddButton()
 {
 
-//    qSort(PointIndex.begin(),PointIndex.end());
-
 }
-void MynWindow::GetData(QList<QSpinBox*> SpinBoxs,QList<QVector<int>> PointIndex)
+
+//void MynWindow::DrawPaint(QWidget *PaintWidget,QList<QVector<int>> PointIndex)
+//{
+
+////    qSort(PointIndex.begin(),PointIndex.end());
+
+//}
+void MynWindow::GetData(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex)
 {
 //    QList<QVector<int>> PointIndex;
     QList<QSpinBox*>::iterator ite= SpinBoxs.begin();
     while(ite != SpinBoxs.end())
     {
-        PointIndex.append(QVector<int>{(*ite)->value(),(*(++ite))->value()});
-
+        PointIndex.append(QPointF((*ite)->value(),(*(++ite))->value()));
         ite++;
     }
-    std::sort(PointIndex.begin(),PointIndex.end(),[](const QVector<int> &a,const QVector<int> &b)
+    std::sort(PointIndex.begin(),PointIndex.end(),[](const QPointF &a,const QPointF &b)
     {
-       return a.at(0)==b.at(0)?a.at(1) < b.at(1):a.at(0) < b.at(0);
+       return a.x()== b.x()?a.y() < b.y():a.x() < b.x();
     });
+}
+
+void MynWindow::CreatNewPoint(QGridLayout *gridLayout, int index)
+{
+    QString name = "点"+str[index];
+    QLineEdit *PointName = new QLineEdit(name);
+    PointName->setReadOnly(true);
+    PointName->setAlignment(Qt::AlignCenter);
+    PointName->setFixedSize(100,20);
+    QSpinBox *X = new QSpinBox(gridLayout->parentWidget());
+    X->setSingleStep(1);
+    X->setFixedSize(100,20);
+    QSpinBox *Y = new QSpinBox(gridLayout->parentWidget());
+    Y->setSingleStep(1);
+    Y->setFixedSize(100,20);
+    gridLayout->addWidget(PointName,index,0);
+    gridLayout->addWidget(X,index,1);
+    gridLayout->addWidget(Y,index,2);
 }
 
 
