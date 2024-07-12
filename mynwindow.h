@@ -26,18 +26,21 @@ public:
     void GetData(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex);
     void CreatNewPoint(QGridLayout *gridLayout,int index);
     void CreatNewPoint(QHBoxLayout *leftupLayout,int index,QList<QSpinBox*> SpinBoxs);
-signals:
-    void AddButtonPushed();
-    void DeleteButtonPushed();
-    void PaintButtonPushed(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex);
-public slots:
+//!     就没有自定义的信号
+//signals:
+//    void PushAddButton(QGridLayout *gridLayout,int index);
+//    void PushDeleteButton(QGridLayout *gridLayout,int index);
+//    void PushPaintButton(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex);
 
-    void PushAddButton();
-    void PushDeleteButton();
-    void PushPaintButton(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex);
+public slots:
+    void AddButtonPushed(QGridLayout *gridLayout);
+    void DeleteButtonPushed(QGridLayout *gridLayout);
+    void PaintButtonPushed(QGridLayout *gridlayout,QWidget *widget);
 private:
-    QString str{" 123456789"};
-    QList<QPointF> points;
+//    QString str{" 123456789"};
+    QList<QPointF> PointIndex;
+    QList<QPointF> DesIndex;
+    int index = 3;
 //private:
 //    Ui::MynWindow *ui;
 //    不借助UI的方法创建就没有这个变量？

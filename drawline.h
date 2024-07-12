@@ -14,82 +14,21 @@
 #include <QEvent>
 #include <QDebug>
 
-//class MyEventFilter : public QWidget
-//{
-//    Q_OBJECT
+class MouseEventFilter:public QObject{
+    Q_OBJECT
+public:
+    MouseEventFilter(QObject *parent = nullptr) : QObject(parent){}
 
-//protected:
-//     bool eventFilter(QObject *obj,QEvent *event) override
-//    {
-//         if(event->type() == QEvent::MouseButtonPress){
-//             getData(dataPoints);
-//             QPainter paint(this);
-//             drawLineChart(&paint);
-//         }
-//         return QObject::eventFilter(obj,event);
-//    }
-//    void paintEvent(QPaintEvent *event)override
-//    {
-//        Q_UNUSED(event);
-//        QPainter paint(this);
-//        paint.setRenderHint(QPainter::Antialiasing);
-//        drawLineChart(&paint);
-
-//    }
-
-
-//     void getData(QList<QPointF> &desdata){
-//         //     更新画图数据   按给定的顺序排列
-//         //!设置精度
-//         qreal precis = 0.01;
-
-//         QList<QPointF> src;
-//         // 随机生成一些数据点
-//         for (int i = 0; i < 5; ++i) {
-//             src.append(QPointF(i, static_cast<float>(rand()) / RAND_MAX * 100));
-//         }
-//         for(qreal t = 0;t < 1.0000; t+=precis){
-//             int size = src.size();
-//             QVector<qreal> coefficient(size, 0);
-//             coefficient[0] = 1.000;
-//             qreal u1 = 1.0 - t;
-//             for (int j = 1; j <= size - 1; j++) {
-//                 qreal saved = 0.0;
-//                 for (int k = 0; k < j; k++){
-//                     qreal temp = coefficient[k];
-//                     coefficient[k] = saved + u1 * temp;
-//                     saved = t * temp;
-//                 }
-//                 coefficient[j] = saved;
-//             }
-
-//             QPointF resultPoint;
-//             for (int i = 0; i < size; i++) {
-//                 QPointF point = src.at(i);
-//                 resultPoint = resultPoint + point * coefficient[i];
-//             }
-//             desdata.append(resultPoint);
-//         }
-//     }
-//private:
-//     void drawLineChart(QPainter *paint){
-//         QPen pen;
-//         pen.setColor(Qt::yellow);
-//         pen.setWidth(1);
-//         QBrush brush(Qt::blue);
-//         paint->setBrush(brush);
-//         paint->setPen(pen);
-
-//         for(QList<QPointF>::iterator it = dataPoints.begin();it!=dataPoints.end();){
-//             paint->drawLine(*it,*(++it));
-//             paint->drawEllipse(*it,2,2);
-//         }
-//     }
-//private:
-//    QList<QPointF> dataPoints = {
-//        {1.0, 2.0}, {3.0, 4.0}, {5.0, 6.0}
-//    };
-//};
+protected:
+    bool eventFilter(QObject *obj,QEvent *event) override {
+        if(event->type() == QEvent::MouseButtonPress){
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            emit mousePressed(obj,mouseEvent->pos());
+        }
+    }
+signals:
+    void mousePressed(QObject *button,const QPoint &pos);
+};
 
 class LineChartWidget : public QWidget {
     Q_OBJECT
@@ -102,7 +41,8 @@ public:
     void setdesData(QList<QPointF> &srcdata) {
 //        dataPoints = data;
 //        我们直接随机生成data  然后处理后得到srcdata
-
+        if(srcdata.isEmpty())
+            return;
         //!设置精度
         qreal precis = 0.001;
 
