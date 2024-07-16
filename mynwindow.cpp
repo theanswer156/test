@@ -130,6 +130,15 @@ MynWindow::MynWindow(QWidget *parent) :
 
 //    rightLayout->addLayout(rightdownLayout);
 
+//!    右边界面：B样条曲线的绘制
+//!
+//!
+//!
+//!
+//!  LineChartWidget *chartWidget = new LineChartWidget(rightdownWidget);
+
+
+
     rightWidget->setLayout(rightLayout);
 
     mainlayout->addWidget(leftupWidget,0,0);
@@ -140,12 +149,6 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 
-//!    右边界面：B样条曲线的绘制
-//!
-//!
-//!
-//!
-//!
 
 
 
@@ -279,6 +282,7 @@ void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
 }
 void MynWindow::DeleteButtonPushed(QGridLayout *gridLayout){
 //    --index;
+    if(index<4) return;
     if(gridLayout){
         for(int col = 0;col<3;col++){
             QLayoutItem *item = gridLayout->itemAtPosition(index,col);

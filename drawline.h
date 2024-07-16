@@ -14,21 +14,21 @@
 #include <QEvent>
 #include <QDebug>
 
-class MouseEventFilter:public QObject{
-    Q_OBJECT
-public:
-    MouseEventFilter(QObject *parent = nullptr) : QObject(parent){}
+//class MouseEventFilter:public QObject{
+//    Q_OBJECT
+//public:
+//    MouseEventFilter(QObject *parent = nullptr) : QObject(parent){}
 
-protected:
-    bool eventFilter(QObject *obj,QEvent *event) override {
-        if(event->type() == QEvent::MouseButtonPress){
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-            emit mousePressed(obj,mouseEvent->pos());
-        }
-    }
-signals:
-    void mousePressed(QObject *button,const QPoint &pos);
-};
+//protected:
+//    bool eventFilter(QObject *obj,QEvent *event) override {
+//        if(event->type() == QEvent::MouseButtonPress){
+//            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+//            emit mousePressed(obj,mouseEvent->pos());
+//        }
+//    }
+//signals:
+//    void mousePressed(QObject *button,const QPoint &pos);
+//};
 
 class LineChartWidget : public QWidget {
     Q_OBJECT
