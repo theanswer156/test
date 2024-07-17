@@ -52,13 +52,6 @@ MynWindow::MynWindow(QWidget *parent) :
     QVBoxLayout *rightdownLayout = new QVBoxLayout(rightdownWidget);
 
 
-//    QVBoxLayout *leftLayout = new QVBoxLayout(leftWidget);
-//    QVBoxLayout *leftVLayout = new QVBoxLayout(leftWidget);
-
-//    用列表来维护SpinBox的顺序
-    QList<QSpinBox*> SpinBoxs;
-
-//    QVBoxLayout *leftupLayout = new QVBoxLayout(leftupWidget);
 
     QLineEdit *PointName = new QLineEdit(QString("名称"),leftupWidget);
     PointName->setFixedSize(100,20);
@@ -82,7 +75,7 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 //    index = 4;
-    for(int i = 1;i<4;++i){
+    for(int i = 1;i<5;++i){
         CreatNewPoint(leftupLayout,i);
     }
 //    CreatNewPoint(leftupLayout,4);
@@ -135,9 +128,11 @@ MynWindow::MynWindow(QWidget *parent) :
 //!
 //!
 //!
-//!  LineChartWidget *chartWidget = new LineChartWidget(rightdownWidget);
+    LineChartWidget *chartWidget = new LineChartWidget(rightupWidget);
+    chartWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    chartWidget->setdesData(PointIndex);
 
-
+    rightupLayout->addWidget(chartWidget);
 
     rightWidget->setLayout(rightLayout);
 
@@ -240,15 +235,15 @@ void MynWindow::CreatNewPoint(QGridLayout *gridLayout, int index)
     QSpinBox *X = new QSpinBox(gridLayout->parentWidget());
     X->setSingleStep(1);
     X->setFixedSize(100,20);
-    X->setMaximum(50);
+    X->setMaximum(500);
 
 //    int randomValue = QRandomGenerator::global()->bounded(0,500);
-    X->setValue(randomgen.bounded(0,50));
+    X->setValue(randomgen.bounded(0,500));
     QSpinBox *Y = new QSpinBox(gridLayout->parentWidget());
     Y->setSingleStep(1);
     Y->setFixedSize(100,20);
-    Y->setMaximum(50);
-    Y->setValue(randomgen.bounded(0,50));
+    Y->setMaximum(500);
+    Y->setValue(randomgen.bounded(0,500));
 
     gridLayout->addWidget(PointName,index,0);
     gridLayout->addWidget(X,index,1);
@@ -268,11 +263,11 @@ void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
     QSpinBox *X = new QSpinBox(gridLayout->parentWidget());
     X->setSingleStep(1);
     X->setFixedSize(100,20);
-    X->setValue(randomgen.bounded(50));
+    X->setValue(randomgen.bounded(500));
     QSpinBox *Y = new QSpinBox(gridLayout->parentWidget());
     Y->setSingleStep(1);
     Y->setFixedSize(100,20);
-    Y->setValue(randomgen.bounded(50));
+    Y->setValue(randomgen.bounded(500));
 
     gridLayout->addWidget(PointName,index,0);
     gridLayout->addWidget(X,index,1);
@@ -298,7 +293,7 @@ void MynWindow::DeleteButtonPushed(QGridLayout *gridLayout){
 }
 void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *widget){
     //!     得到SpinBox中的数据
-
+    PointIndex.clear();
     for(int row = index;row>3;--row){
         QSpinBox *Y = qobject_cast<QSpinBox*>(gridlayout->itemAtPosition(row,2)->widget());
         QSpinBox *X = qobject_cast<QSpinBox*>(gridlayout->itemAtPosition(row,1)->widget());
@@ -323,8 +318,7 @@ void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *widget){
 
     //         绘制数据点
     QPainter painter(widget);
-    QBrush brush(Qt::blue);
-    painter.setBrush(brush);
+    painter.setBrush(Qt::blue);
     for (const QPointF &point : PointIndex) {
         painter.drawEllipse(point, 2, 2);
     }

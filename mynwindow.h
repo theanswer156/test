@@ -40,7 +40,7 @@ private:
 //    QString str{" 123456789"};
     QList<QPointF> PointIndex;
     QList<QPointF> DesIndex;
-    int index = 3;
+    int index = 6;
 //private:
 //    Ui::MynWindow *ui;
 //    不借助UI的方法创建就没有这个变量？
