@@ -20,9 +20,8 @@
 
 MynWindow::MynWindow(QWidget *parent) :
     QMainWindow(parent)
-//    ui(new Ui::MynWindow)
+
 {
-//    ui->setupUi(this);
 
     QWidget *centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
@@ -52,7 +51,6 @@ MynWindow::MynWindow(QWidget *parent) :
     QVBoxLayout *rightdownLayout = new QVBoxLayout(rightdownWidget);
 
 
-
     QLineEdit *PointName = new QLineEdit(QString("名称"),leftupWidget);
     PointName->setFixedSize(100,20);
     PointName->setAlignment(Qt::AlignCenter);
@@ -75,8 +73,8 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 //    index = 4;
-    for(int i = 1;i<5;++i){
-        CreatNewPoint(leftupLayout,i);
+    for(int i = 1;i<index;++i){
+        CreatNewPoint(leftupLayout);
     }
 //    CreatNewPoint(leftupLayout,4);
 
@@ -107,12 +105,11 @@ MynWindow::MynWindow(QWidget *parent) :
     leftdownLayout->addWidget(AddButton);
     leftdownLayout->addWidget(DeleteButton);
 
-//    leftLayout->addLayout(leftupLayout);
-//    leftLayout->addLayout(leftdownLayout);
+
     leftWidget->setLayout(leftLayout);
-//    leftLayout->addWidget(leftdownWidget);
+
     QPushButton *PaintButton = new QPushButton("绘制曲线",rightdownWidget);
-//    connect(PaintButton,&QPushButton::click,this,&MynWindow::PushPaintButton);
+
     PaintButton->setFixedSize(100,50);
     rightdownLayout->addWidget(PaintButton,0);
     connect(PaintButton,&QPushButton::clicked,[this,leftupLayout,rightupWidget](){
@@ -121,18 +118,20 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 
-//    rightLayout->addLayout(rightdownLayout);
+
 
 //!    右边界面：B样条曲线的绘制
 //!
 //!
 //!
 //!
-    LineChartWidget *chartWidget = new LineChartWidget(rightupWidget);
-    chartWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-    chartWidget->setdesData(PointIndex);
 
-    rightupLayout->addWidget(chartWidget);
+//    LineChartWidget *chartWidget = new LineChartWidget(rightupWidget);
+
+//    chartWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+
+//    rightupLayout->addWidget(chartWidget);
 
     rightWidget->setLayout(rightLayout);
 
@@ -144,88 +143,23 @@ MynWindow::MynWindow(QWidget *parent) :
 
 
 
-
-
-
-
-
-
-
-
-
 }
+
 MynWindow::~MynWindow()
 {
-//    delete MynWindow;
+
 }
 
-void MynWindow::CreatNewPoint(QHBoxLayout *LeftupHLayout,int index,QList<QSpinBox*> SpinBoxs)
-{
-//    QWidget *leftWidget = new QWidget(parent);
-//    QHBoxLayout *leftLayout = new QHBoxLayout(parent);
-//    QWidget VWidget = new QWidget(VLayout->parentWidget());
 
-//    QWidget *LeftWidget = new QWidget(HLayout->parentWidget());
-//    QHBoxLayout *HLayout = new QHBoxLayout(widget);
-    QString name = "点"+QString::number(index);
-    QLineEdit *PointName = new QLineEdit(name);
-    PointName->setReadOnly(true);
-    PointName->setAlignment(Qt::AlignCenter);
-    PointName->setFixedSize(100,20);
-    QSpinBox *X = new QSpinBox(LeftupHLayout->parentWidget());
-    X->setSingleStep(1);
-    X->setFixedSize(100,20);
-    SpinBoxs.append(X);
-    QSpinBox *Y = new QSpinBox(LeftupHLayout->parentWidget());
-    Y->setSingleStep(1);
-    Y->setFixedSize(100,20);
-    SpinBoxs.append(Y);
-    LeftupHLayout->addWidget(PointName);
-    LeftupHLayout->addWidget(X);
-    LeftupHLayout->addWidget(Y);
-}
 
 //!     信号不需要实现  只需要定义   而且就没有这些信号
-//void MynWindow::PushDeleteButton(QGridLayout *gridLayout,int index)
-//{
 
-//}
 
-//void MynWindow::PushPaintButton(QList<QSpinBox *> SpinBoxs, QList<QPointF> PointIndex)
-//{
-
-//}
-
-//void MynWindow::PushAddButton(QGridLayout *gridLayout,int index)
-//{
-
-//}
-
-//void MynWindow::DrawPaint(QWidget *PaintWidget,QList<QVector<int>> PointIndex)
-//{
-
-////    qSort(PointIndex.begin(),PointIndex.end());
-
-//}
-void MynWindow::GetData(QList<QSpinBox*> SpinBoxs,QList<QPointF> PointIndex)
+void MynWindow::CreatNewPoint(QGridLayout *gridLayout)
 {
-//    QList<QVector<int>> PointIndex;
-    QList<QSpinBox*>::iterator ite= SpinBoxs.begin();
-    while(ite != SpinBoxs.end())
-    {
-        PointIndex.append(QPointF((*ite)->value(),(*(++ite))->value()));
-        ite++;
-    }
-    std::sort(PointIndex.begin(),PointIndex.end(),[](const QPointF &a,const QPointF &b)
-    {
-       return a.x()== b.x()?a.y() < b.y():a.x() < b.x();
-    });
-}
 
-void MynWindow::CreatNewPoint(QGridLayout *gridLayout, int index)
-{
     QRandomGenerator randomgen;
-    quint32 seed = QRandomGenerator::global()->bounded(0,10);
+    quint32 seed = QRandomGenerator::global()->bounded(0,500);
     randomgen.seed(seed);
     QString name = "点"+QString::number(index);
     QLineEdit *PointName = new QLineEdit(name);
@@ -235,25 +169,27 @@ void MynWindow::CreatNewPoint(QGridLayout *gridLayout, int index)
     QSpinBox *X = new QSpinBox(gridLayout->parentWidget());
     X->setSingleStep(1);
     X->setFixedSize(100,20);
-    X->setMaximum(500);
+//    X->setMaximum(500);
 
-//    int randomValue = QRandomGenerator::global()->bounded(0,500);
     X->setValue(randomgen.bounded(0,500));
     QSpinBox *Y = new QSpinBox(gridLayout->parentWidget());
     Y->setSingleStep(1);
     Y->setFixedSize(100,20);
-    Y->setMaximum(500);
-    Y->setValue(randomgen.bounded(0,500));
+    Y->setMinimum(100);
+//    Y->setMaximum(500);
+    Y->setValue(randomgen.bounded(100,500));
 
     gridLayout->addWidget(PointName,index,0);
     gridLayout->addWidget(X,index,1);
     gridLayout->addWidget(Y,index,2);
+    ++index;
 }
 
 void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
-    ++index;
+
+
     QRandomGenerator randomgen;
-    quint32 seed = QRandomGenerator::global()->bounded(0,10);
+    quint32 seed = QRandomGenerator::global()->bounded(0,500);
     randomgen.seed(seed);
     QString name = "点"+QString::number(index);
     QLineEdit *PointName = new QLineEdit(name);
@@ -267,97 +203,84 @@ void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
     QSpinBox *Y = new QSpinBox(gridLayout->parentWidget());
     Y->setSingleStep(1);
     Y->setFixedSize(100,20);
-    Y->setValue(randomgen.bounded(500));
+    Y->setMinimum(100);
+    Y->setValue(randomgen.bounded(100,500));
 
-    gridLayout->addWidget(PointName,index,0);
-    gridLayout->addWidget(X,index,1);
-    gridLayout->addWidget(Y,index,2);
-    qDebug()<<index;
-
+    gridLayout->addWidget(PointName,index+1,0);
+    gridLayout->addWidget(X,index+1,1);
+    gridLayout->addWidget(Y,index+1,2);
+    qDebug()<<"Add index :"<<index;
+    ++index;
 }
 void MynWindow::DeleteButtonPushed(QGridLayout *gridLayout){
-//    --index;
-    if(index<4) return;
+
+    if(index<5) return;
     if(gridLayout){
         for(int col = 0;col<3;col++){
             QLayoutItem *item = gridLayout->itemAtPosition(index,col);
             if(item){
-                QWidget *widget = item->widget();
-                delete widget;
+                delete item->widget();
             }
         }
         gridLayout->update();
     }
     --index;
-    qDebug()<<index;
+    qDebug()<<"Delete index :"<<index;
 }
-void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *widget){
-    //!     得到SpinBox中的数据
-    PointIndex.clear();
-    for(int row = index;row>3;--row){
+void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *rightupwidget){
+
+//    return;
+    QPainter painter(rightupwidget);
+    srcdata.clear();
+    qDebug()<<"绘制图像时，有几个点的坐标"<<index-1;
+    for(int row = index-1;row>1;--row){
+        //!     这里有什么毛病
+        //!     row==index的时候就退出了   why
+
         QSpinBox *Y = qobject_cast<QSpinBox*>(gridlayout->itemAtPosition(row,2)->widget());
         QSpinBox *X = qobject_cast<QSpinBox*>(gridlayout->itemAtPosition(row,1)->widget());
-        PointIndex.append(QPointF(X->value(),Y->value()));
+        //!     总是执行到row=7的时候强制退出了
+        if(X){
+            qDebug()<<"X->value():"<<X->value();
+        }
+        if(Y){
+            qDebug()<<"Y->value():"<<Y->value();
+        }
+
+        if (X && Y) {
+            srcdata.append(QPointF(X->value(), Y->value()));
+        } else {
+            qDebug() << "Failed to cast widget to QSpinBox at row" << row;
+        }
+        qDebug()<<"row :"<<row;
+        qDebug()<<"size of srcdata"<<srcdata.size();
+        //!      到了三就强制退出了
+        //!      都还没执行到后面的debug
     }
-    std::sort(PointIndex.begin(),PointIndex.end(),[](const QPointF &a,const QPointF &b)
+    qDebug()<<"还没执行到这";
+    std::sort(srcdata.begin(),srcdata.end(),[](const QPointF &a,const QPointF &b)
     {
        return a.x()== b.x()?a.y() < b.y():a.x() < b.x();
     });
-    if(PointIndex.isEmpty())
+    qDebug()<<"efgjo"<<srcdata.size();
+    if(srcdata.isEmpty())
         return;
-    DesIndex.clear();
-    //!设置精度
-    qreal precis = 0.01;
-
-
-    // 随机生成一些数据点
-//        for (int i = 0; i < 100; i+=1) {
-//            PointIndex.append(QPointF(i, static_cast<float>(rand()) / RAND_MAX * 100));
-//        }
-
-
-    //         绘制数据点
-    QPainter painter(widget);
     painter.setBrush(Qt::blue);
-    for (const QPointF &point : PointIndex) {
+    for (const QPointF &point : srcdata) {
+        qDebug()<<point;
         painter.drawEllipse(point, 2, 2);
     }
-
-
-    for(qreal t = 0;t < 1.0000; t+=precis){
-        int size = PointIndex.size();
-        QVector<qreal> coefficient(size, 0);
-        coefficient[0] = 1.000;
-        qreal u1 = 1.0 - t;
-        for (int j = 1; j <= size - 1; j++) {
-            qreal saved = 0.0;
-            for (int k = 0; k < j; k++){
-                qreal temp = coefficient[k];
-                coefficient[k] = saved + u1 * temp;
-                saved = t * temp;
-            }
-            coefficient[j] = saved;
-        }
-
-        QPointF resultPoint;
-        for (int i = 0; i < size; i++) {
-            QPointF point = PointIndex.at(i);
-            resultPoint = resultPoint + point * coefficient[i];
-        }
-        DesIndex.append(resultPoint);
-    }
-
-    QPen pen(Qt::red);
-    pen.setWidth(1);
-    painter.setPen(pen);
-
-    for (int i = 0; i < DesIndex.size() - 1; ++i) {
-        QPointF start = DesIndex[i];
-        QPointF end = DesIndex[i + 1];
-        painter.drawLine(start, end);
-    }
-
+    desdata1.clear();
+    desdata3.clear();
+    getDesdata1(srcdata);
+    desdata2.clear();
+    getDesdata2(srcdata);
+    getDesdata_Resampling();
+    drawLineChart1(&painter);
+    drawLineChart3(&painter);
+    drawLineChart2(&painter);
 }
+
 
 
 
