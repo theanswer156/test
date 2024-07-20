@@ -198,14 +198,14 @@ protected:
         if(srcdata.isEmpty()) return;
         Q_UNUSED(event);
         QPainter painter(this);
-        QRectF topRightRect = geometry().marginsRemoved(QMargins(0, 0, width() / 2, height() / 2));
-        painter.translate(topRightRect.topLeft());
+
+        painter.translate(this->width()/2,0);
         //! 保存当前的转换矩阵
         QTransform oldTransform = painter.transform();
 
         //! 移动到缩放中心的负向位置，然后应用缩放
-        painter.translate(-zoomCenter.x(), -zoomCenter.y());
-        painter.scale(zoomlevel, zoomlevel);
+//        painter.translate(-zoomCenter.x(), -zoomCenter.y());
+//        painter.scale(zoomlevel, zoomlevel);
 
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
 

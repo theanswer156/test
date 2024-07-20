@@ -292,7 +292,7 @@ void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *rightwidget){
 
     for (const QPointF &point : srcdata) {
         qDebug()<<point;
-        painter.drawEllipse(point, 2, 2);
+        painter.drawEllipse(point, 5, 5);
     }
     desdata1.clear();
     desdata3.clear();
