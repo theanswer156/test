@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QtCharts/QChart>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -113,12 +113,12 @@ public:
         //!     无法计算准确的数值了   所以前两个和后两个不能按照位置来
         //!     必须在计算后就改变   而不是按照坐标来
         for(qreal t = 0;t<1.0000;t+=precis){
-            richardson[0] = desdata3.at(i-2);
-            richardson[1] = desdata3.at(i-1);
-            richardson[2] = desdata3.at(i+1);
-            richardson[3] = desdata3.at(i+2);
-            /*计算currPoint和nextPoint中间点的导数值f'(x)   如果大于阈值的话要画不同的线*/
             if(i<=desdata1.size()-3){
+            richardson[0] = desdata1.at(i-2);
+            richardson[1] = desdata1.at(i-1);
+            richardson[2] = desdata1.at(i+1);
+            richardson[3] = desdata1.at(i+2);
+            /*计算currPoint和nextPoint中间点的导数值f'(x)   如果大于阈值的话要画不同的线*/
             QPointF gradF = (-richardson[3]+8*richardson[2]-8*(richardson[1])+(richardson[0]))*reciprocalPrecis/12;
             QPointF ggradF = (richardson[1]+richardson[2]-2*desdata1[i])*reciprocalPrecis*reciprocalPrecis;
             qreal curvate = qPow(qPow(gradF.x()*ggradF.y(),2)+qPow(gradF.y()*ggradF.x(),2),0.5)/qPow(gradF.x()*gradF.x()+gradF.y()*gradF.y(),0.75);
@@ -155,49 +155,51 @@ public slots:
     void DeleteButtonPushed(QGridLayout *gridLayout);
     void PaintButtonPushed(QGridLayout *gridlayout,QWidget *widget);
 protected:
-    void wheelEvent(QWheelEvent *event)override{
-        double scaleFactor = 1.01;
+//    void wheelEvent(QWheelEvent *event)override{
+//        double scaleFactor = 1.01;
 
-        if(event->angleDelta().y()>0){
-            zoomlevel*=scaleFactor;
-        }else{
-            zoomlevel/=scaleFactor;
-        }
-        //!     这里就是告诉event参数有改变
-        //!     我希望能够根据更改后的参数重绘图像
-        event->accept();
-        update();
-    }
-    void mousePressEvent(QMouseEvent *event) override {
-        if (event->button() == Qt::LeftButton) {
-            // 记录鼠标按下时的位置
-            lastMousePosition = event->pos();
-            isDragging = true;
-        }
-    }
+//        if(event->angleDelta().y()>0){
+//            zoomlevel*=scaleFactor;
+//        }else{
+//            zoomlevel/=scaleFactor;
+//        }
+//        //!     这里就是告诉event参数有改变
+//        //!     我希望能够根据更改后的参数重绘图像
+//        event->accept();
+//        update();
+//    }
+//    void mousePressEvent(QMouseEvent *event) override {
+//        if (event->button() == Qt::LeftButton) {
+//            // 记录鼠标按下时的位置
+//            lastMousePosition = event->pos();
+//            isDragging = true;
+//        }
+//    }
 
-    void mouseMoveEvent(QMouseEvent *event) override {
-        if (isDragging && (event->buttons() & Qt::LeftButton)) {
-            // 计算鼠标移动的差值
-            QPoint delta = event->pos() - lastMousePosition;
-            // 更新图像位置（这里以移动widget为例）
-            this->move(x() + delta.x(), y() + delta.y());
-            // 更新最后鼠标位置
-            lastMousePosition = event->pos();
-        }
-    }
+//    void mouseMoveEvent(QMouseEvent *event) override {
+//        if (isDragging && (event->buttons() & Qt::LeftButton)) {
+//            // 计算鼠标移动的差值
+//            QPoint delta = event->pos() - lastMousePosition;
+//            // 更新图像位置（这里以移动widget为例）
+//            this->move(x() + delta.x(), y() + delta.y());
+//            // 更新最后鼠标位置
+//            lastMousePosition = event->pos();
+//        }
+//    }
 
-    void mouseReleaseEvent(QMouseEvent *event) override {
-        if (event->button() == Qt::LeftButton) {
-            isDragging = false;
-        }
-    }
+//    void mouseReleaseEvent(QMouseEvent *event) override {
+//        if (event->button() == Qt::LeftButton) {
+//            isDragging = false;
+//        }
+//    }
+
+
     void paintEvent(QPaintEvent *event) override {
         if(srcdata.isEmpty()) return;
         Q_UNUSED(event);
         QPainter painter(this);
-//        QRectF topRightRect = geometry().marginsRemoved(QMargins(0, 0, width() / 2, height() / 2));
-//        painter.translate(topRightRect.topLeft());
+        QRectF topRightRect = geometry().marginsRemoved(QMargins(0, 0, width() / 2, height() / 2));
+        painter.translate(topRightRect.topLeft());
         //! 保存当前的转换矩阵
         QTransform oldTransform = painter.transform();
 
@@ -211,6 +213,11 @@ protected:
 //        setdesdata();
 //        drawPoint();
 //        qDebug()<<"size of srcdata"<<srcdata.size();
+
+
+//        PaintButtonPushed()
+
+
         drawLineChart1(&painter);
         drawLineChart2(&painter);
         drawLineChart3(&painter);
@@ -273,7 +280,7 @@ private:
             QPointF end = desdata1[i + 1];
             end.setX((end.x())*this->size().width()/max_X);
             painter->drawLine(start, end);
-            painter->drawEllipse(start,Point_Radius,Point_Radius);
+//            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 1 painted";
     }
@@ -292,7 +299,7 @@ private:
             QPointF end = desdata2[i + 1];
             end.setX(end.x()*this->size().width()/max_X);
             painter->drawLine(start, end);
-            painter->drawEllipse(start,Point_Radius,Point_Radius);
+//            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 2 painted";
     }
@@ -312,7 +319,7 @@ private:
             end.setX(end.x()*this->size().width()/max_X);
             painter->drawLine(start, end);
             /*painter->setBrush(Qt::black);*/
-            painter->drawEllipse(start,Point_Radius,Point_Radius);
+//            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 3 painted";
     }
