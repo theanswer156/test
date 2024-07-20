@@ -27,7 +27,8 @@ MynWindow::MynWindow(QWidget *parent) :
         this->setCentralWidget(centralWidget);
         //    没有使用过的变量也会引起警告
         // 创建水平布局
-        QGridLayout *mainlayout = new QGridLayout(centralWidget);
+    centralWidget->setFixedSize(1000,500);
+        QHBoxLayout *mainlayout = new QHBoxLayout(centralWidget);
     //    已经说明centralwidget是个水平布局了  所以可以有下面两句
     //    分别得到左边和右边的界面
         QWidget *leftWidget = new QWidget(centralWidget);
@@ -40,17 +41,16 @@ MynWindow::MynWindow(QWidget *parent) :
     //    QHBoxLayout *LeftupLayout = new QHBoxLayout(leftupWidget);
 
         QWidget *leftupWidget = new QWidget(leftWidget);
-        leftupWidget->setMaximumWidth(500);
+        leftupWidget->setMaximumWidth(600);
         QGridLayout *leftupLayout = new QGridLayout(leftupWidget);
         leftupLayout->setVerticalSpacing(20);
         QWidget *leftdownWidget = new QWidget(leftWidget);
+        leftdownWidget->setMaximumWidth(500);
         QHBoxLayout *leftdownLayout = new QHBoxLayout(leftdownWidget);
-
-        QWidget *rightupWidget = new QWidget(rightWidget);
-        QVBoxLayout *rightupLayout = new QVBoxLayout(rightupWidget);
-        Q_UNUSED(rightupLayout);
-        QWidget *rightdownWidget = new QWidget(rightWidget);
-        QVBoxLayout *rightdownLayout = new QVBoxLayout(rightdownWidget);
+//        QWidget *rightupWidget = new QWidget(rightWidget);
+//        QVBoxLayout *rightupLayout = new QVBoxLayout(rightupWidget);
+//        QWidget *rightdownWidget = new QWidget(rightWidget);
+//        QVBoxLayout *rightdownLayout = new QVBoxLayout(rightdownWidget);
 
 
         QLineEdit *PointName = new QLineEdit(QString("名称"),leftupWidget);
@@ -101,18 +101,22 @@ MynWindow::MynWindow(QWidget *parent) :
         });
         //! 删除按钮信号槽链接
         //!
-        AddButton->setFixedSize(200,50);
-        DeleteButton->setFixedSize(200,50);
+        AddButton->setFixedSize(150,50);
+        DeleteButton->setFixedSize(150,50);
 
         leftdownLayout->addWidget(AddButton);
         leftdownLayout->addWidget(DeleteButton);
 
+//        leftLayout->addLayout(leftupLayout);
+//        leftLayout->addLayout(leftdownLayout);
+        leftLayout->addWidget(leftupWidget);
+        leftLayout->addWidget(leftdownWidget);
 
         leftWidget->setLayout(leftLayout);
 
-        QPushButton *PaintButton = new QPushButton("绘制曲线",rightdownWidget);
+        QPushButton *PaintButton = new QPushButton("绘制曲线",leftdownWidget);
 
-        PaintButton->setFixedSize(100,50);
+        PaintButton->setFixedSize(150,50);
         leftdownLayout->addWidget(PaintButton);
         connect(PaintButton,&QPushButton::clicked,[this,leftupLayout,rightWidget](){
           PaintButtonPushed(leftupLayout,rightWidget);
@@ -136,12 +140,14 @@ MynWindow::MynWindow(QWidget *parent) :
     //    rightupLayout->addWidget(chartWidget);
 
         rightWidget->setLayout(rightLayout);
+//        mainlayout->addStretch(1);
+        mainlayout->addWidget(leftWidget);
+//        mainlayout->addStretch(4);
+        mainlayout->addWidget(rightWidget);
+//        mainlayout->addWidget(leftdownWidget,1,0);
 
-        mainlayout->addWidget(leftupWidget,0,0);
-        mainlayout->addWidget(leftdownWidget,1,0);
-
-        mainlayout->addWidget(rightupWidget,0,1);
-        mainlayout->addWidget(rightdownWidget,1,1);
+//        mainlayout->addWidget(rightupWidget,0,1);
+//        mainlayout->addWidget(rightdownWidget,1,1);
 
 
 }
@@ -174,7 +180,7 @@ void MynWindow::CreatNewPoint(QGridLayout *gridLayout)
 //    X->setMinimum(100);
 
     X->setMaximum(500);
-    qreal xValue = (static_cast<qreal>(randomgen.bounded(100,500)));
+    qreal xValue = (static_cast<qreal>(randomgen.bounded(50,200)));
     X->setValue(xValue);
 
     QDoubleSpinBox *Y = new QDoubleSpinBox(gridLayout->parentWidget());
@@ -183,7 +189,7 @@ void MynWindow::CreatNewPoint(QGridLayout *gridLayout)
     Y->setDecimals(1);
 //    Y->setMinimum(100);
     Y->setMaximum(500);
-    qreal yValue = (static_cast<qreal>(randomgen.bounded(100,500)));
+    qreal yValue = (static_cast<qreal>(randomgen.bounded(100,400)));
     Y->setValue(yValue);
 
     gridLayout->addWidget(PointName,index,0);
@@ -197,7 +203,7 @@ void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
 
 
     QRandomGenerator randomgen;
-    quint32 seed = QRandomGenerator::global()->bounded(0,100);
+    quint32 seed = QRandomGenerator::global()->bounded(100,500);
     randomgen.seed(seed);
     QString name = "点"+QString::number(index);
     QLineEdit *PointName = new QLineEdit(name);
@@ -208,17 +214,17 @@ void MynWindow::AddButtonPushed(QGridLayout *gridLayout){
     X->setSingleStep(0.1);
     X->setFixedSize(100,20);
     X->setDecimals(1);
-    X->setMinimum(100);
+//    X->setMinimum(100);
 
-    X->setMaximum(1000);
-    qreal xValue = (static_cast<qreal>(randomgen.bounded(100,500)));
+    X->setMaximum(500);
+    qreal xValue = (static_cast<qreal>(randomgen.bounded(150,200)));
     X->setValue(xValue);
     QDoubleSpinBox *Y = new QDoubleSpinBox(gridLayout->parentWidget());
     Y->setSingleStep(0.1);
     Y->setFixedSize(100,20);
     Y->setDecimals(1);
-    Y->setMinimum(100);
-    Y->setMaximum(1000);
+//    Y->setMinimum(100);
+    Y->setMaximum(500);
     qreal yValue = (static_cast<qreal>(randomgen.bounded(100,500)));
     Y->setValue(yValue);
 
@@ -287,7 +293,7 @@ void MynWindow::PaintButtonPushed(QGridLayout *gridlayout,QWidget *rightwidget){
 
     for (const QPointF &point : srcdata) {
         qDebug()<<point;
-        painter.drawEllipse(point, 2, 2);
+        painter.drawEllipse(point, 5, 5);
     }
     desdata1.clear();
     desdata3.clear();

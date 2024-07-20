@@ -198,21 +198,21 @@ protected:
         if(srcdata.isEmpty()) return;
         Q_UNUSED(event);
         QPainter painter(this);
-        QRectF topRightRect = geometry().marginsRemoved(QMargins(0, 0, width() / 2, height() / 2));
-        painter.translate(topRightRect.topLeft());
+
+        painter.translate(300,0);
         //! 保存当前的转换矩阵
         QTransform oldTransform = painter.transform();
 
         //! 移动到缩放中心的负向位置，然后应用缩放
-        painter.translate(-zoomCenter.x(), -zoomCenter.y());
-        painter.scale(zoomlevel, zoomlevel);
+//        painter.translate(-zoomCenter.x(), -zoomCenter.y());
+//        painter.scale(zoomlevel, zoomlevel);
 
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-        // 绘制折线图
+//         绘制折线图
 //        setdesdata();
 //        drawPoint();
-//        qDebug()<<"size of srcdata"<<srcdata.size();
+        qDebug()<<"size of srcdata"<<srcdata.size();
 
 
 //        PaintButtonPushed()
@@ -221,12 +221,15 @@ protected:
         drawLineChart1(&painter);
         drawLineChart2(&painter);
         drawLineChart3(&painter);
-        //! 程序长时间输出    "Line X Painted" 是因为painteevent重复调用drawLineChartX函数
-        //! 所以是没有问题的
+//        ! 程序长时间输出    "Line X Painted" 是因为painteevent重复调用drawLineChartX函数
+//        ! 所以是没有问题的
 
 
         painter.setTransform(oldTransform);
     }
+
+
+
 //    void resizeEvent(QResizeEvent *event) override {
 //        Q_UNUSED(event);
 //        QPainter painter(this);
@@ -280,7 +283,7 @@ private:
             QPointF end = desdata1[i + 1];
             end.setX((end.x())*this->size().width()/max_X);
             painter->drawLine(start, end);
-//            painter->drawEllipse(start,Point_Radius,Point_Radius);
+            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 1 painted";
     }
@@ -299,7 +302,7 @@ private:
             QPointF end = desdata2[i + 1];
             end.setX(end.x()*this->size().width()/max_X);
             painter->drawLine(start, end);
-//            painter->drawEllipse(start,Point_Radius,Point_Radius);
+            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 2 painted";
     }
@@ -319,7 +322,7 @@ private:
             end.setX(end.x()*this->size().width()/max_X);
             painter->drawLine(start, end);
             /*painter->setBrush(Qt::black);*/
-//            painter->drawEllipse(start,Point_Radius,Point_Radius);
+            painter->drawEllipse(start,Point_Radius,Point_Radius);
         }
         qDebug()<<"Line 3 painted";
     }
