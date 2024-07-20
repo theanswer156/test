@@ -27,10 +27,6 @@ MynWindow::MynWindow(QWidget *parent) :
         this->setCentralWidget(centralWidget);
         //    没有使用过的变量也会引起警告
         // 创建水平布局
-<<<<<<< HEAD
-    centralWidget->setFixedSize(1000,500);
-=======
->>>>>>> 08d173ea229dfcdb2190d67a61b5f07b2f2845a9
         QHBoxLayout *mainlayout = new QHBoxLayout(centralWidget);
     //    已经说明centralwidget是个水平布局了  所以可以有下面两句
     //    分别得到左边和右边的界面
@@ -183,11 +179,7 @@ void MynWindow::CreatNewPoint(QGridLayout *gridLayout)
 //    X->setMinimum(100);
 
     X->setMaximum(500);
-<<<<<<< HEAD
-    qreal xValue = (static_cast<qreal>(randomgen.bounded(50,200)));
-=======
     qreal xValue = (static_cast<qreal>(randomgen.bounded(200,500)));
->>>>>>> 08d173ea229dfcdb2190d67a61b5f07b2f2845a9
     X->setValue(xValue);
 
     QDoubleSpinBox *Y = new QDoubleSpinBox(gridLayout->parentWidget());

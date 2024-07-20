@@ -199,11 +199,9 @@ protected:
         Q_UNUSED(event);
         QPainter painter(this);
 
-<<<<<<< HEAD
+
         painter.translate(300,0);
-=======
-        painter.translate(this->width()/2,0);
->>>>>>> 08d173ea229dfcdb2190d67a61b5f07b2f2845a9
+
         //! 保存当前的转换矩阵
         QTransform oldTransform = painter.transform();
 
